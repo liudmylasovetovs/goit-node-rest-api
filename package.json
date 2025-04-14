@@ -11,7 +11,8 @@
     "express": "^4.21.2",
     "joi": "^17.11.0",
     "morgan": "^1.10.0",
-    "nanoid": "^5.1.5"
+    "nanoid": "^5.1.5",
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
