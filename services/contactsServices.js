@@ -1,4 +1,4 @@
-import Contact from "../db/models/contact.js"
+import Contact from "../db/models/Contact.js"
 
 export const listContacts = () => Contact.findAll();
 
@@ -6,15 +6,16 @@ export const getContactById = id => Contact.findByPk(id);
 
 export const addContact = data => Contact.create(data);
 
-export const removeContact = id => Contact.destroy({
-    where: {
-    id,
-  },
-  });
+export const removeContact = async (id) => {
+  const contact = await Contact.findByPk(id);
+  if (!contact) return null;
+  await contact.destroy();
+  return contact;
+};
 
 export const updateContacts = async (id, data) => {
   const contact = await getContactById(id);
-  if (contact === -1) return null;
+  if (!contact) return null;
 
   return contact.update(data, {
     returning: true,
@@ -23,7 +24,7 @@ export const updateContacts = async (id, data) => {
 
 export const updateStatusContacts = async (id, {favorite}) => {
   const contact = await getContactById(id);
-  if(contact === -1) return null;
+  if(!contact) return null;
 
   return contact.update({favorite}, {returning: true});
 };
