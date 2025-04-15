@@ -1,8 +1,13 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import "dotenv/config"; 
 
+import sequelize from "./db/Sequelize.js";
 import contactsRouter from "./routes/contactsRouter.js";
+
+
+
 
 const app = express();
 
@@ -21,6 +26,9 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
+const {PORT = 3000} = process.env;
+const port = Number(PORT);
+
 app.listen(3000, () => {
-  console.log("Server is running. Use our API on port: 3000");
+  console.log(`Server is running. Use our API on port: ${port}`);
 });
