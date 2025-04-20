@@ -25,10 +25,6 @@ const Contact = sequelize.define(
         allowNull: false,
       },
     },
-    {
-      createdAt: false,
-      updatedAt: false,
-    },
   
 );
 
