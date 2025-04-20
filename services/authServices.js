@@ -32,31 +32,22 @@ export const loginUser = async (data) => {
       email,
     },
   });
-  if (!user) {
-    throw HttpError(401, "Email or password invalid");
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw HttpError(401, "Email or password is wrong");
   }
 
-  const passwordCompare = await bcrypt.compare(password, user.password);
-
-  if (!passwordCompare) {
-    throw HttpError(401, "Email or password invalid");
-  }
-  const payload = {
-    email,
-  };
-
-  const token = generateToken(payload);
+  const token = generateToken({ id: user.id });
 
   await user.update({ token });
 
   return {
-    token,
+    token, user,
   };
 };
 export const logoutUser = async (id) => {
   const user = await findUser({ id });
   if (!user || !user.token) {
-    throw HttpError(404, "User not found");
+    throw HttpError(401, "Not authorized");
   }
 
   await user.update({ token: null });

@@ -1,10 +1,9 @@
 import * as authServices from "../services/authServices.js"
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
-import validateBody from "../helpers/validateBody.js";
 
 
 const registerController = async (req, res)=>{
-    const newUser = await authServices.registerUser(req.body);
+    const { email, subscription } = await authServices.registerUser(req.body);
 
     res.status(201).json({
         user: {
@@ -16,9 +15,12 @@ const registerController = async (req, res)=>{
 
 const loginController = async (req, res)=>{
     const {token, user} = await authServices.loginUser(req.body);
+    const { email, subscription } = user;
 
     res.json({
-        token, user
+        token, user: {
+            email, subscription
+        },
     });
 };
 
@@ -26,15 +28,17 @@ const logoutController = async (req, res)=>{
     const { id } = req.user;
     await authServices.logoutUser(id);
   
-    res.status(204).json({
-      message: 'Logout successfully',
-    });
+    // res.status(204).json({
+    //   message: 'No Content',
+    // });
+    res.status(204).send();
+
   };
   
   const getCurrentController = (req, res) => {
     const { email, subscription } = req.user;
   
-    res.json({
+    res.status(200).json({
       email,
       subscription,
     });
