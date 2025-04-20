@@ -36,6 +36,8 @@ export const loginUser = async (data) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
+  const payload = { id: user.id };
+
   const token = generateToken({ id: user.id });
 
   await user.update({ token });
@@ -46,7 +48,7 @@ export const loginUser = async (data) => {
 };
 export const logoutUser = async (id) => {
   const user = await findUser({ id });
-  if (!user || !user.token) {
+  if (!user) {
     throw HttpError(401, "Not authorized");
   }
 

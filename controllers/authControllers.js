@@ -28,9 +28,6 @@ const logoutController = async (req, res)=>{
     const { id } = req.user;
     await authServices.logoutUser(id);
   
-    // res.status(204).json({
-    //   message: 'No Content',
-    // });
     res.status(204).send();
 
   };
