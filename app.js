@@ -5,6 +5,8 @@ import "dotenv/config";
 
 import authRouter from "./routes/authRouter.js"
 import contactsRouter from "./routes/contactsRouter.js";
+import Contact from "./db/models/contact.js";
+import User from "./db/models/user.js";
 
 const app = express();
 
@@ -24,6 +26,18 @@ app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err;
   res.status(status).json({ message });
 });
+
+const syncDb = async () => {
+  try {
+    await User.sync({ alter: true });
+    await Contact.sync({ alter: true });
+    console.log("Tables synced!");
+  } catch (error) {
+    console.error("DB sync error:", error.message);
+  }
+};
+
+syncDb();
 
 const {PORT = 3000} = process.env;
 const port = Number(PORT);
