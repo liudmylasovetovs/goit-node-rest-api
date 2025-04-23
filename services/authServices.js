@@ -3,20 +3,18 @@ import User from "../db/models/user.js";
 import HttpError from "../helpers/HttpError.js";
 import { generateToken } from "../helpers/jwt.js";
 
-export const findUser = (query) =>
-  User.findOne({ where: query });
+export const findUser = (query) => User.findOne({ where: query });
 
 export const registerUser = async (data) => {
   const { email, password } = data;
-
   const hashPassword = await bcrypt.hash(password, 10);
   return User.create({ ...data, password: hashPassword });
 };
 
 export const loginUser = async (data) => {
   const { email, password } = data;
-
   const user = await User.findOne({ where: { email } });
+
   if (!user || !(await bcrypt.compare(password, user.password))) {
     throw HttpError(401, "Email or password is wrong");
   }
