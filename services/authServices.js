@@ -35,3 +35,5 @@ export const logoutUser = async (id) => {
 
   await user.update({ token: null });
 };
+
+export const comparePassword = (password, hash) => bcrypt.compare(password, hash);

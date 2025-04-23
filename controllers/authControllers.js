@@ -1,9 +1,12 @@
 import * as authServices from "../services/authServices.js"; 
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import HttpError from "../helpers/HttpError.js";
+import { generateToken } from "../helpers/jwt.js";
+
 
 const registerController = async (req, res) => {
-    const existingUser = await authServices.findUserByEmail(req.body.email);
+  const existingUser = await authServices.findUser({ email: req.body.email });
+
     if (existingUser) {
         throw HttpError(409, "Email in use");
     }
@@ -20,7 +23,8 @@ const registerController = async (req, res) => {
 
 const loginController = async (req, res) => {
     const { email, password } = req.body;
-    const user = await authServices.findUserByEmail(email);
+    const user = await authServices.findUser({ email });
+
 
     if (!user) {
         throw HttpError(401, "Email or password is wrong");
@@ -32,7 +36,8 @@ const loginController = async (req, res) => {
         throw HttpError(401, "Email or password is wrong");
     }
 
-    const { token } = await authServices.generateToken(user);
+    const token = generateToken({ id: user.id });
+
 
     res.json({
         token,
