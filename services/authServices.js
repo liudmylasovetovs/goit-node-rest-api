@@ -10,7 +10,7 @@ export const registerUser = async (data) => {
   const { email, password } = data;
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email, { s: '250', d: 'retro' }, true);
-  return User.create({ ...data, password: hashPassword });
+  return User.create({ ...data, password: hashPassword, avatarURL });
 };
 
 export const loginUser = async (data) => {
