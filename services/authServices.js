@@ -2,12 +2,14 @@ import bcrypt from "bcrypt";
 import User from "../db/models/user.js";
 import HttpError from "../helpers/HttpError.js";
 import { generateToken } from "../helpers/jwt.js";
+import gravatar from "gravatar";
 
 export const findUser = (query) => User.findOne({ where: query });
 
 export const registerUser = async (data) => {
   const { email, password } = data;
   const hashPassword = await bcrypt.hash(password, 10);
+  const avatarURL = gravatar.url(email, { s: '250', d: 'retro' }, true);
   return User.create({ ...data, password: hashPassword });
 };
 
