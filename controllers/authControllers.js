@@ -8,30 +8,16 @@ const avatarsDir = path.resolve("public", "avatars");
 
 const registerController = async (req, res) => {
   const existingUser = await authServices.findUser({ email: req.body.email });
-
   if (existingUser) {
     throw HttpError(409, "Email in use");
   }
-
   const { email, subscription } = await authServices.registerUser(req.body);
-
-  res.status(201).json({
-    user: {
-      email,
-      subscription,
-    },
-  });
+  res.status(201).json({ user: { email, subscription } });
 };
 
 const loginController = async (req, res) => {
   const { token, user } = await authServices.loginUser(req.body);
-  res.json({
-    token,
-    user: {
-      email: user.email,
-      subscription: user.subscription,
-    },
-  });
+  res.json({ token, user: { email: user.email, subscription: user.subscription } });
 };
 
 const logoutController = async (req, res) => {
@@ -61,10 +47,26 @@ const updateAvatarController = async (req, res) => {
   res.status(200).json({ avatarURL });
 };
 
+// 🆕 Додаємо нові контролери для верифікації
+
+const verifyController = async (req, res) => {
+  const { verificationToken } = req.params;
+  await authServices.verifyUser(verificationToken);
+  res.status(200).json({ message: "Verification successful" });
+};
+
+const resendVerifyController = async (req, res) => {
+  const { email } = req.body;
+  await authServices.resendVerificationEmail(email);
+  res.status(200).json({ message: "Verification email sent" });
+};
+
 export default {
   registerController: ctrlWrapper(registerController),
   loginController: ctrlWrapper(loginController),
   logoutController: ctrlWrapper(logoutController),
   getCurrentController: ctrlWrapper(getCurrentController),
   updateAvatarController: ctrlWrapper(updateAvatarController),
+  verifyController: ctrlWrapper(verifyController),
+  resendVerifyController: ctrlWrapper(resendVerifyController),
 };
