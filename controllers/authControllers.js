@@ -32,6 +32,10 @@ const getCurrentController = (req, res) => {
 };
 
 const updateAvatarController = async (req, res) => {
+  if (!req.file) {
+    throw HttpError(400, "No file uploaded");
+  }
+
   const { path: tempPath, originalname } = req.file;
   const { id } = req.user;
 
@@ -46,8 +50,6 @@ const updateAvatarController = async (req, res) => {
 
   res.status(200).json({ avatarURL });
 };
-
-// 🆕 Додаємо нові контролери для верифікації
 
 const verifyController = async (req, res) => {
   const { verificationToken } = req.params;
