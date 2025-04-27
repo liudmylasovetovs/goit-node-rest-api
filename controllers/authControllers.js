@@ -47,8 +47,6 @@ const updateAvatarController = async (req, res) => {
   res.status(200).json({ avatarURL });
 };
 
-// 🆕 Додаємо нові контролери для верифікації
-
 const verifyController = async (req, res) => {
   const { verificationToken } = req.params;
   await authServices.verifyUser(verificationToken);
