@@ -5,7 +5,6 @@ import HttpError from "../helpers/HttpError.js";
 
 const tempDir = path.resolve("temp");
 
-// 🆕 Перевірка на існування папки temp перед початком роботи
 try {
   await fs.access(tempDir);
 } catch {
